@@ -1,98 +1,268 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Текстові поля в Python — Практична робота (8 клас)</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-  <link rel="stylesheet" href="css/style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎨 Навчальний практикум: PYTHON GUI LAB — Текстові поля</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="min-h-screen bg-slate-50 text-slate-900">
-  <!-- Стартовий екран реєстрації учня -->
-  <section id="screen-registration" class="min-h-screen flex items-center justify-center p-4">
-    <div class="w-full max-w-lg bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
-      <div class="space-y-2">
-        <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-800 border border-indigo-200">
-          Інформатика • 8 клас • Практична робота
-        </span>
-        <h1 class="text-2xl font-bold text-slate-900">Текстові поля в Python</h1>
-        <p class="text-sm text-slate-600">
-          Інтерактивний практикум із роботи з текстовими полями: теорія, візуальний аналіз, симулятори, Drag &amp; Drop, відкриті відповіді, конструювання форми та аналітичний звіт.
-        </p>
-      </div>
+<body>
 
-      <form id="reg-form" class="space-y-4" novalidate>
-        <div>
-          <label for="reg-lastname" class="block text-sm font-medium text-slate-700 mb-1">Прізвище</label>
-          <input id="reg-lastname" name="lastname" type="text" required placeholder="Введіть прізвище" class="w-full rounded-lg border border-slate-300 px-3.5 py-2 text-sm focus:border-sky-600 focus:outline-none" />
-        </div>
-        <div>
-          <label for="reg-firstname" class="block text-sm font-medium text-slate-700 mb-1">Ім'я</label>
-          <input id="reg-firstname" name="firstname" type="text" required placeholder="Введіть ім'я" class="w-full rounded-lg border border-slate-300 px-3.5 py-2 text-sm focus:border-sky-600 focus:outline-none" />
-        </div>
-        <div>
-          <label for="reg-class" class="block text-sm font-medium text-slate-700 mb-1">Клас</label>
-          <input id="reg-class" name="classname" type="text" required placeholder="Наприклад: 8-А, 8-Б, 8-В" class="w-full rounded-lg border border-slate-300 px-3.5 py-2 text-sm focus:border-sky-600 focus:outline-none" />
-        </div>
-        <button id="reg-submit" type="submit" disabled class="w-full py-2.5 px-4 rounded-lg bg-indigo-800 text-white font-semibold text-sm hover:bg-indigo-900 transition opacity-50 cursor-not-allowed">
-          Розпочати роботу
-        </button>
-      </form>
-    </div>
-  </section>
-
-  <!-- Основний робочий екран -->
-  <div id="screen-workspace" class="hidden min-h-screen flex flex-col">
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-20">
-      <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
-        <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-lg bg-indigo-900 text-white flex items-center justify-center font-bold text-sm">Py</div>
-          <div>
-            <div class="font-bold text-slate-900 text-sm sm:text-base">Текстові поля в Python (8 клас)</div>
-            <div id="current-section-num" class="text-xs text-slate-500">Розділ 1 з 7</div>
-          </div>
-        </div>
-
-        <div class="flex items-center gap-4 action-bar">
-          <div class="w-40 sm:w-52">
-            <div class="flex justify-between text-[11px] text-slate-600 mb-1">
-              <span>Прогрес</span>
-              <span id="overall-progress-label">0 / 12 балів (0%)</span>
+<header>
+    <div class="header-content">
+        <div class="logo-box">
+            <span class="logo-icon">🐍</span>
+            <div>
+                <h1>PYTHON GUI LAB</h1>
+                <p>Текстові поля у Tkinter · Інформатика 8 клас</p>
             </div>
-            <div class="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
-              <div id="overall-progress-bar" class="h-full bg-sky-600 transition-all duration-300" style="width:0%"></div>
-            </div>
-          </div>
-          <span id="student-badge" class="hidden md:inline-block text-xs font-medium px-3 py-1 rounded-full bg-slate-100 text-slate-700"></span>
         </div>
-      </div>
-    </header>
-
-    <div class="flex-1 max-w-7xl w-full mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
-      <aside class="lg:col-span-3">
-        <nav id="sidebar-nav" class="bg-white rounded-xl border border-slate-200 p-2 space-y-1 shadow-sm"></nav>
-      </aside>
-
-      <main class="lg:col-span-9 space-y-4">
-        <div id="section-content"></div>
-
-        <div class="flex items-center justify-between pt-2 nav-controls">
-          <button type="button" id="btn-prev-section" class="px-4 py-2 rounded-lg border border-slate-300 bg-white text-slate-700 text-sm font-medium hover:bg-slate-50 disabled:opacity-40">
-            Попередній розділ
-          </button>
-          <button type="button" id="btn-next-section" class="px-4 py-2 rounded-lg bg-indigo-800 text-white text-sm font-medium hover:bg-indigo-900">
-            Наступний розділ
-          </button>
+        <div class="header-progress">
+            <div style="font-size: 0.85rem; color: var(--text-muted);">Прогрес виконання: <strong id="progressText" style="color: var(--mint);">0%</strong></div>
+            <div class="progress-bar-container"><div class="progress-bar" id="progressBar"></div></div>
         </div>
-      </main>
     </div>
-  </div>
+</header>
 
-  <script src="js/questions.js"></script>
-  <script src="js/simulators.js"></script>
-  <script src="js/logo-editor.js"></script>
-  <script src="js/report.js"></script>
-  <script src="js/app.js"></script>
+<main>
+    <!-- HERO SECTION -->
+    <section class="hero-card">
+        <div class="hero-tag">Практикум для учнів 8 класу</div>
+        <h2>Текстові поля в Python: Entry(), get(), insert(), delete() 🚀</h2>
+        <p>Стань розробником графічних програм! Опрацюй теорію, виконай інтерактивні вправи на симуляторі вікон Tkinter, напиши власний код та отримай підсумковий звіт з оцінкою.</p>
+        
+        <div class="user-input-group">
+            <input type="text" id="studentName" placeholder="Введи своє прізвище та ім'я..." autocomplete="off">
+            <button type="button" id="btnInitStudent" class="btn btn-primary" onclick="initStudent()">Розпочати навчання 🔥</button>
+        </div>
+    </section>
+
+    <!-- NAVIGATION TABS -->
+    <nav class="nav-tabs">
+        <button type="button" id="tab-block1" class="tab-btn active" onclick="switchTab('block1')">1. Теорія та інтерфейс</button>
+        <button type="button" id="tab-block2" class="tab-btn" onclick="switchTab('block2')">2. Симулятори й практика</button>
+        <button type="button" id="tab-block3" class="tab-btn" onclick="switchTab('block3')">3. Відкриті відповіді</button>
+        <button type="button" id="tab-block4" class="tab-btn" onclick="switchTab('block4')">4. Підсумковий звіт</button>
+    </nav>
+
+    <!-- BLOCK 1: THEORY & TEST -->
+    <div id="block1" class="section-block active">
+        <div class="block-header">
+            <div class="block-num">01</div>
+            <div>
+                <h2>Теорія та тестові запитання</h2>
+                <p>Опрацюй теоретичні картки та дай відповіді на 10 запитань із вибором однієї відповіді.</p>
+            </div>
+        </div>
+
+        <!-- Theory Cards -->
+        <div class="cards-grid" style="margin-bottom: 2rem;">
+            <div class="card">
+                <h3>📌 Віджет Entry()</h3>
+                <p>Текстове поле у Tkinter призначене для введення одного рядка тексту від користувача.</p>
+                <div class="code-block">entry = Entry(root, width=25)
+entry.pack()</div>
+            </div>
+            <div class="card">
+                <h3>📥 Метод get()</h3>
+                <p>Повертає поточний рядок, введений у текстове поле Entry у вигляді <code>str</code>.</p>
+                <div class="code-block">user_text = entry.get()</div>
+            </div>
+            <div class="card">
+                <h3>✏️ Методи delete() та insert()</h3>
+                <p><code>delete(0, END)</code> очищає весь вміст поля, а <code>insert(0, "текст")</code> вставляє рядок на початок.</p>
+                <div class="code-block">entry.delete(0, END)
+entry.insert(0, "Привіт!")</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Тест на знання віджетів Tkinter</h3>
+            <div id="quizContainer"></div>
+            <button type="button" id="btnCheckQuiz" class="btn btn-mint" style="margin-top: 15px;" onclick="checkQuiz()">Перевірити тест 📝</button>
+        </div>
+    </div>
+
+    <!-- BLOCK 2: SIMULATORS & PRACTICAL WORKSHOP -->
+    <div id="block2" class="section-block">
+        <div class="block-header">
+            <div class="block-num">02</div>
+            <div>
+                <h2>Інтерактивні симулятори та практика</h2>
+                <p>Досліди роботу методів у віртуальному вікні Tkinter та напиши власні програми.</p>
+            </div>
+        </div>
+
+        <div class="sim-grid">
+            <!-- Sim A: Interactive Methods -->
+            <div class="card">
+                <h3>А. Симулятор методів get(), insert(), delete()</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">Протестуй дії методів прямо у віртуальному вікні Tkinter:</p>
+                
+                <div class="gui-sim-window">
+                    <div class="gui-sim-title">Вікно Tkinter (Симуляція)</div>
+                    <div class="gui-sim-body">
+                        <label style="font-size: 0.8rem; display:block; margin-bottom: 4px;">Entry(root):</label>
+                        <input type="text" id="simEntryField" value="Python 8 клас" style="width: 80%; padding: 6px; border-radius: 6px; border: 1px solid #cbd5e1; font-family: monospace;">
+                        <div id="simLabelOut" style="margin-top: 10px; font-weight: bold; color: var(--primary); font-size: 0.9rem;">Label: (тут з'явиться текст)</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+                    <button type="button" id="btnSimGet" class="btn btn-primary" onclick="simGetText()">get()</button>
+                    <button type="button" id="btnSimClear" class="btn btn-secondary" onclick="simClearText()">delete(0, END)</button>
+                    <button type="button" id="btnSimInsert" class="btn btn-secondary" onclick="simInsertText()">insert(0, 'Tkinter ')</button>
+                </div>
+            </div>
+
+            <!-- Sim B: Sequence -->
+            <div class="card">
+                <h3>Б. Віднови послідовність створення програми</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">Встанови правильний порядок команд для програми привітання:</p>
+                <div id="sequenceContainer"></div>
+                <button type="button" id="btnCheckSeq" class="btn btn-mint" style="margin-top: 12px;" onclick="checkSequence()">Перевірити порядок 🧩</button>
+                <div id="seqFeedback" class="feedback"></div>
+            </div>
+        </div>
+
+        <!-- Code Workshop -->
+        <div class="card" style="margin-top: 1.5rem;">
+            <h3>В. Практична майстерня: Кодування Tkinter</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">Напиши код для створення програми «Мініанкета» (двох полів імені та прізвища та кнопки очищення):</p>
+            
+            <div class="editor-container">
+                <div>
+                    <label style="font-weight: 600; font-size: 0.9rem;">Редактор Python Tkinter:</label>
+                    <textarea id="workshopCode" class="code-editor" spellcheck="false">from tkinter import *
+
+root = Tk()
+root.title("Мініанкета")
+
+entry_fn = Entry(root)
+entry_fn.pack()
+
+entry_ln = Entry(root)
+entry_ln.pack()
+
+def show():
+    lbl.config(text=entry_fn.get() + " " + entry_ln.get())
+
+def clear():
+    entry_fn.delete(0, END)
+    entry_ln.delete(0, END)
+    lbl.config(text="")
+
+btn_show = Button(root, text="Показати", command=show)
+btn_show.pack()
+
+btn_cls = Button(root, text="Очистити", command=clear)
+btn_cls.pack()
+
+lbl = Label(root, text="")
+lbl.pack()
+
+root.mainloop()</textarea>
+                </div>
+                <div>
+                    <label style="font-weight: 600; font-size: 0.9rem;">Інтерактивний результат програми:</label>
+                    <div class="gui-sim-window" style="height: 220px; background: #f8fafc;">
+                        <div class="gui-sim-title">Мініанкета</div>
+                        <div class="gui-sim-body" style="text-align: center;">
+                            <input type="text" id="workFn" placeholder="Ім'я" style="padding:4px; margin-bottom:4px; width:80%;"><br>
+                            <input type="text" id="workLn" placeholder="Прізвище" style="padding:4px; margin-bottom:8px; width:80%;"><br>
+                            <button type="button" id="btnWorkShow" class="btn btn-primary" style="padding: 6px 12px; font-size: 0.8rem;" onclick="workShow()">Показати</button>
+                            <button type="button" id="btnWorkClear" class="btn btn-secondary" style="padding: 6px 12px; font-size: 0.8rem;" onclick="workClear()">Очистити</button>
+                            <div id="workOutput" style="margin-top:12px; font-weight:bold; color:var(--accent);"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="btnVerifyWorkshop" class="btn btn-mint" style="margin-top: 15px;" onclick="verifyWorkshopCode()">Перевірити код програми 🚀</button>
+            <div id="workshopFeedback" class="feedback"></div>
+        </div>
+    </div>
+
+    <!-- BLOCK 3: OPEN QUESTIONS -->
+    <div id="block3" class="section-block">
+        <div class="block-header">
+            <div class="block-num">03</div>
+            <div>
+                <h2>Питання з відкритою відповіддю</h2>
+                <p>Дай розгорнуті письмові відповіді. Система виконає попередній аналіз за ключовими поняттями.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Запитання 1. Для чого потрібен параметр command у кнопці Button()?</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 10px;">Поясни, як кнопка пов'язується з функцією для обробки тексту з Entry.</p>
+            <textarea id="openText1" rows="3" class="open-textarea" placeholder="Введи свою відповідь сюди..."></textarea>
+        </div>
+
+        <div class="card">
+            <h3>Запитання 2. У чому різниця між методами delete(0, END) та insert(0, "текст")?</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 10px;">Опиши призначення обох методів для текстового поля.</p>
+            <textarea id="openText2" rows="3" class="open-textarea" placeholder="Введи свою відповідь сюди..."></textarea>
+        </div>
+
+        <button type="button" id="btnSaveOpen" class="btn btn-mint" onclick="checkOpenQuestions()">Зберегти розгорнуті відповіді ✍️</button>
+        <div id="openFeedback" class="feedback"></div>
+    </div>
+
+    <!-- BLOCK 4: AUTOMATIC REPORT -->
+    <div id="block4" class="section-block">
+        <div class="block-header">
+            <div class="block-num">04</div>
+            <div>
+                <h2>Підсумковий документ</h2>
+                <p>Автоматично згенерований звіт успішності учня.</p>
+            </div>
+        </div>
+
+        <div class="card report-card" id="reportCard">
+            <div class="report-header">
+                <div>
+                    <p style="text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; color: var(--mint); font-weight: 700;">Підсумковий звіт</p>
+                    <h2>Практикум: «Python GUI — Текстові поля»</h2>
+                </div>
+                <div class="badge" id="repBadge">Складено</div>
+            </div>
+
+            <div class="report-meta">
+                <div class="meta-item"><span>Учень / учениця:</span><strong id="repName">—</strong></div>
+                <div class="meta-item"><span>Клас:</span><strong>8 клас</strong></div>
+                <div class="meta-item"><span>Дата фіксації:</span><strong id="repDate">—</strong></div>
+            </div>
+
+            <div class="report-analytics">
+                <div style="width: 180px; height: 180px; position: relative;">
+                    <canvas id="scoreChart"></canvas>
+                </div>
+                <div>
+                    <p style="font-size: 1.1rem;">Тестовий результат: <strong id="repTestScore" style="color: var(--primary);">0 / 10</strong></p>
+                    <p style="font-size: 1.1rem;">Успішність у %: <strong id="repPercent" style="color: var(--mint);">0%</strong></p>
+                    <p style="font-size: 1.1rem;">Підсумкова оцінка: <strong id="repGrade" style="color: var(--accent); font-size: 1.4rem;">0 балів</strong></p>
+                    <h4 id="repLevelText" style="color: var(--text-light); margin-top: 10px;">-</h4>
+                </div>
+            </div>
+
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 20px;">Звіт сформовано навчальним вебзастосунком. Для збереження у форматі PDF скористайтесь кнопкою друку нижче.</p>
+
+            <div class="no-print" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button type="button" id="btnPrintReport" class="btn btn-primary" onclick="window.print()">Зберегти звіт у PDF / Друк 📄</button>
+                <button type="button" id="btnRestart" class="btn btn-secondary" onclick="switchTab('block1')">На початок 🏠</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    Навчальний проєкт з інформатики для 8 класу · Python Tkinter GUI
+</footer>
+
+<script src="js/script.js"></script>
 </body>
 </html>
